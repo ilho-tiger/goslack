@@ -33,7 +33,7 @@ package main
 import "github.com/ilho-tiger/goslack/slack"
 
 func main() {
-	slack.SetWebhookURL("https://hooks.slack.com/services/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")
+	slack.SetWebhookURL("https://hooks.slack.com/...")
 	slack.SendMessage("wow")
 }
 ```
