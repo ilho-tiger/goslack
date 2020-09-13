@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 )
@@ -12,18 +11,12 @@ import (
 var webhookURL string = ""
 
 const (
-	enableSlackEnvVarName = "enable_slack"
-	webhookEnvVarName     = "slack_webhook"
+	webhookEnvVarName = "slack_webhook"
 )
 
 // SendMessage will send given message as a Slack incoming webhook
 func SendMessage(message string) error {
-	if IsSlackEnabled() == false {
-		log.Println("Slack message is disabled by the envrionment, skipping.")
-		fmt.Printf("\n%s\n", message)
-		return nil
-	}
-	getWebhookURL()
+	setWebhookURLFromEnvIfEmptyy()
 	var err error = nil
 
 	requestBody, err := json.Marshal(map[string]string{
@@ -41,28 +34,25 @@ func SendMessage(message string) error {
 	return err
 }
 
-// IsSlackEnabled returns slack message configuration
-func IsSlackEnabled() bool {
-	value := os.Getenv(enableSlackEnvVarName)
-	if value == "true" {
-		return true
-	}
-	return false
-}
-
 // SetWebhookURL sets the webhook url to use for Slack
 func SetWebhookURL(url string) {
 	webhookURL = url
 }
 
-func getWebhookURL() error {
+// WebhookURL returns the currently configured webhookURL value
+func WebhookURL() string {
+	setWebhookURLFromEnvIfEmptyy()
+	return webhookURL
+}
+
+func setWebhookURLFromEnvIfEmptyy() error {
 	if webhookURL != "" {
 		return nil // url has been already set with value
 	}
-	return getWebhookURLFromEnv()
+	return setWebhookURLFromEnv()
 }
 
-func getWebhookURLFromEnv() error {
+func setWebhookURLFromEnv() error {
 	var err error
 	var value string
 
