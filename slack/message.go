@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 )
 
@@ -17,6 +18,9 @@ const (
 // SendMessage will send given message as a Slack incoming webhook
 func SendMessage(message string) error {
 	setWebhookURLFromEnvIfEmptyy()
+	if webhookEnvVarName == "" || !isValidUrl(webhookURL) {
+		return fmt.Errorf("Not valid webhook url: \"%s\"", webhookURL)
+	}
 	var err error = nil
 
 	requestBody, err := json.Marshal(map[string]string{
@@ -63,4 +67,19 @@ func setWebhookURLFromEnv() error {
 		err = fmt.Errorf("No environment variable named '%s' found", webhookEnvVarName)
 	}
 	return err
+}
+
+// isValidUrl tests a string to determine if it is a well-structured url or not.
+func isValidUrl(toTest string) bool {
+	_, err := url.ParseRequestURI(toTest)
+	if err != nil {
+		return false
+	}
+
+	u, err := url.Parse(toTest)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		return false
+	}
+
+	return true
 }
