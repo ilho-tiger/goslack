@@ -12,7 +12,7 @@ func Test_SendMessage(t *testing.T) {
 }
 
 func Test_getWebhookURL(t *testing.T) {
-	err := getWebhookURL()
+	err := setWebhookURLFromEnvIfEmptyy()
 	t.Log("value:", webhookURL)
 	t.Log("err:", err)
 }
