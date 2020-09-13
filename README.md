@@ -25,13 +25,16 @@ e.g.
 $ goslack -message "Hello Slackers!"
 ```
 
-As a Go module in your own Go applcation,
+As a Go package in your own Go applcation,
 
 ```go
-import "github.com/ilho-tiger/goslack"
+package main
+
+import "github.com/ilho-tiger/goslack/slack"
 
 func main() {
-    slack.SendMessage("Hello Slackers!")
+	slack.SetWebhookURL("https://hooks.slack.com/services/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")
+	slack.SendMessage("wow")
 }
 ```
 
